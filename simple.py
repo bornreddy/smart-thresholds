@@ -11,16 +11,16 @@ except IOError:
 
 threshold = raw_input("Choose threshold value: ") 
 
-color_array = []
+intensity_array = []
 
 for w in range(0,bw.size[1]):
   for h in range(0,bw.size[0]):
-    color = bw.getpixel((h,w))
-    if (color <= int(threshold)):
+    intensity = bw.getpixel((h,w))
+    if (intensity <= int(threshold)):
       x = 0
     else:
       x = 255
-    color_array.append(x)
+    intensity_array.append(x)
 
-bw.putdata(color_array)
+bw.putdata(intensity_array)
 bw.show()
