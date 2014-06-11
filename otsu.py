@@ -7,73 +7,43 @@ try:
   img.load()
   img.show()
   bw = img.convert('L')
+  bw.show()
 except IOError:
   print "Unable to open file. Please try another format."
 
-# create np.histogram from the opened image
-
-# b and f indicate background and foreground
-def otsu(hist, total):
-  sum = 0;
-  # iteratively add up all intensities of all pixels
-  for i in range(0,255):
-    sum += i * histogram[i]
-  sumB = 0
-  sumF = 0
-  wB = 0
-  wF = 0
-  mB = 0
-  mF = 0
-  max = 0.0
-  between = 0.0
-  thresh1 = 0.0
-  thresh2 = 0.0
-  for i in range(0,255):
-    # find the weight of the background pixels (the number of pixels in background)
-    wB += histogram[i]
-    if wB == 0:
-      continue
-    # find weight of foreground pixels (number of pixels in foreground)
-    wF = sum - wB
-    if wF == 0:
-      break
-    # find the sum of the background pixels
-    sumB += i * histogram[i]
-    sumF = sum - sumB
-    #calculate background/foreground average intensity
-    mB = sumB/wB 
-    mF = sumF/wF
-    # calculate 
-    between = wB * wF * (mB - mF)**2
-    
-    
-    
-    
-    
-   
-
-'''
-total_pixels = bw.size[0] * bw.size[1]
-histogram = {}
-
+grayscale_array = []
 for w in range(0,bw.size[0]):
   for h in range(0,bw.size[1]):
     intensity = bw.getpixel((w,h))
-    if intensity in histogram:
-      histogram[intensity] += 1
-    else:
-      histogram[intensity] = 1
+    grayscale_array.append(intensity)
 
-def all_probs(hist):
-  p_hist = {}
-  for x in hist.keys():
-    p_hist[x] = hist[x]*1.0/total_pixels
-  return p_hist
+total_pixels = bw.size[0] * bw.size[1]
+bins = range(0,257)
+img_histogram = np.histogram(grayscale_array, bins)
 
-prob_histogram = all_probs(histogram)  
-print bw.size
-print histogram
-print prob_histogram
-'''
+def otsu(hist, total):
+  current_max, threshold = 0, 0
+  sumT, sumF, sumB = 0, 0, 0
+  for i in range(0,256):
+    sumT += i * hist[0][i]
+  weightB, weightF = 0, 0
+  varBetween, meanB, meanF = 0, 0, 0
+  for i in range(0,256):
+    weightB += hist[0][i]
+    weightF = total - weightB
+    if weightF == 0:
+      break
+    sumB += i*hist[0][i]
+    sumF = sumT - sumB
+    meanB = sumB/weightB
+    meanF = sumF/weightF
+    varBetween = weightB * weightF
+    varBetween *= (meanB-meanF)*(meanB-meanF)
+    if varBetween > current_max:
+      current_max = varBetween
+      threshold = i 
+  return threshold
+
+print otsu(img_histogram, total_pixels)
 
 
