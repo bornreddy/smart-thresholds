@@ -1,16 +1,21 @@
 from PIL import Image
 import os, sys
 import numpy as np
+import basic_threshold as bt
+
+'''
+file_name = "images/kidney.jpg"
 
 try:
-  img = Image.open(sys.argv[1])
+  img = Image.open(file_name)
   img.load()
   img.show()
   bw = img.convert('L')
-  bw.show()
+  #bw.show()
 except IOError:
   print "Unable to open file. Please try another format."
-
+'''
+'''
 grayscale_array = []
 for w in range(0,bw.size[0]):
   for h in range(0,bw.size[1]):
@@ -20,8 +25,27 @@ for w in range(0,bw.size[0]):
 total_pixels = bw.size[0] * bw.size[1]
 bins = range(0,257)
 img_histogram = np.histogram(grayscale_array, bins)
+'''
+def total_pix(image):
+  size = image.size[0] * image.size[1]
+  return size
 
-def otsu(hist, total):
+def histogramify(image):
+  grayscale_array = []
+  for w in range(0,image.size[0]):
+    for h in range(0,image.size[1]):
+      intensity = image.getpixel((w,h))
+      grayscale_array.append(intensity)
+
+  total_pixels = image.size[0] * image.size[1]
+  bins = range(0,257)
+  img_histogram = np.histogram(grayscale_array, bins)
+  return img_histogram
+
+
+def otsu(image):
+  hist = histogramify(image)
+  total = total_pix(image)
   current_max, threshold = 0, 0
   sumT, sumF, sumB = 0, 0, 0
   for i in range(0,256):
@@ -42,8 +66,13 @@ def otsu(hist, total):
     if varBetween > current_max:
       current_max = varBetween
       threshold = i 
+  print threshold
+  bt.threshold(threshold, image) 
   return threshold
 
-print otsu(img_histogram, total_pixels)
 
-
+'''
+thresh =  otsu(img_histogram, total_pixels)
+print thresh
+bt.threshold(thresh, bw) 
+'''

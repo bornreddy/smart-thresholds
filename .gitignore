@@ -7,3 +7,5 @@
 auto-save-list
 tramp
 .\#*
+
+*.pyc
