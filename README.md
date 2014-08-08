@@ -5,4 +5,4 @@ Python implementation of basic and Otsu thresholding algorithms. This project co
 
 Use this Product:
 ======
-Clone this repo, then run "make ARG=<path to image>". Be sure to enter a valid image path as a string. 
+Clone this repo, then run "make ARG=image_path". Be sure to enter a valid image path as a string. 
