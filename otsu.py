@@ -66,7 +66,7 @@ def otsu(image):
     if varBetween > current_max:
       current_max = varBetween
       threshold = i 
-  print threshold
+  print "threshold is:", threshold
   bt.threshold(threshold, image) 
   return threshold
 
